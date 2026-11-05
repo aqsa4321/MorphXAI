@@ -1,0 +1,30 @@
+epoch: 50
+
+LearningRate:
+  base_lr: 0.0004
+  schedulers:
+  - !PiecewiseDecay
+    gamma: 1.0
+    milestones: [100]
+    use_warmup: true
+  - !LinearWarmup
+    start_factor: 0.001
+    steps: 2000
+
+OptimizerBuilder:
+  clip_grad_by_norm: 0.1
+  regularizer: false
+  optimizer:
+    type: AdamW
+    weight_decay: 0.0001
+
+# python tools/train.py -c configs/rtdetrv3/rtdetrv3_r18vd_6x_trypanosoma.yml --eval
+#  python tools/infer.py -c configs/rtdetrv3/rtdetrv3_r18vd_6x_trypanosoma.yml -o weights=output/best_model.pdparams --infer_dir=/home/axy9651/Tryp/data_2/combined/images_subset
+# python tools/infer.py -c configs/rtdetrv3/rtdetrv3_r18vd_6x_trypanosoma.yml -o weights=output/best_model/model.pdparams --infer_img=/home/axy9651/Tryp/data/Plasmodium-v1/data_subset/images/small_images_10/6ec7e6df-9176-4024-b712-e307ff9e9c77.jpg --output_dir=debug_output_new
+
+
+# python tools/infer.py -c configs/rtdetrv3/rtdetrv3_r18vd_6x_trypanosoma.yml -o weights=output/best_model.pdparams --infer_dir=/home/axy9651/Tryp/data/Plasmodium-v1/data_subset/images/small_images_10
+
+# python tools/eval.py -c configs/rtdetrv3/rtdetrv3_r18vd_6x_trypanosoma.yml -o weights=/home/axy9651/Tryp/RT-DETRv3-shape/output/25.pdparams
+
+# python tools/eval.py -c configs/rtdetrv3/rtdetrv3_r18vd_6x_trypanosoma.yml -o weights=output/best_model/model.pdparams

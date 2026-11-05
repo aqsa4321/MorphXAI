@@ -1,0 +1,59 @@
+metric: COCO
+num_classes: 3
+TrainDataset:
+  name: COCODataSet
+  image_dir: images/train
+  anno_path: annotations_shape/train_combined_shape.json
+  dataset_dir: /home/aqsa/Final_Dataset
+  data_fields: ['image', 'gt_bbox', 'gt_class', 'gt_morphology', 'is_crowd']
+EvalDataset:
+  name: COCODataSet
+  image_dir: images/val
+  anno_path: annotations_shape/val_combined_shape.json
+  dataset_dir: /home/aqsa/Final_Dataset
+  data_fields: ['image', 'gt_bbox', 'gt_class', 'gt_morphology', 'is_crowd']
+TestDataset:
+  name: ImageFolder
+  anno_path: annotations_shape/val_combined_shape.json
+  dataset_dir: /home/aqsa/Final_Dataset
+
+# metric: COCO
+# num_classes: 6
+# TrainDataset:
+#   name: COCODataSet
+#   image_dir: images/train
+#   anno_path: annotations-shape/train.json
+#   dataset_dir: /home/axy9651/Tryp/data/Plasmodium-v1/data_subset
+#   data_fields: ['image', 'gt_bbox', 'gt_class', 'gt_morphology', 'is_crowd']
+# EvalDataset:
+#   name: COCODataSet
+#   image_dir: images/validation
+#   anno_path: annotations-shape/validation.json
+#   dataset_dir: /home/axy9651/Tryp/data/Plasmodium-v1/data_subset
+#   data_fields: ['image', 'gt_bbox', 'gt_class', 'gt_morphology', 'is_crowd']
+# TestDataset:
+#   name: ImageFolder
+#   anno_path: annotations-shape/validation.json
+#   dataset_dir: /home/axy9651/Tryp/data/Plasmodium-v1/data_subset
+
+
+
+# metric: COCO
+# num_classes: 1
+# TrainDataset:
+#   name: COCODataSet
+#   image_dir: images/train2017
+#   anno_path: annotations/instances_extreme_train2017_extended.json
+#   dataset_dir: Trypanosoma-data
+#   data_fields: ['image', 'gt_bbox', 'gt_class', 'gt_morphology', 'is_crowd']
+# EvalDataset:
+#   name: COCODataSet
+#   image_dir: images/val2017
+#   anno_path: annotations/instances_extreme_val2017_extended.json
+#   dataset_dir: Trypanosoma-data
+#   data_fields: ['image', 'gt_bbox', 'gt_class', 'gt_morphology', 'is_crowd']
+# TestDataset:
+#   name: ImageFolder
+#   anno_path: annotations/instances_extreme_val2017_with_shapes.json
+#   dataset_dir: Trypanosoma-data
+

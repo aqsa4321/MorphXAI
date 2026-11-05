@@ -1,0 +1,173 @@
+_BASE_: [
+  '../datasets/trypanosoma_detection.yml',  # Update this to your new dataset config
+  '../runtime.yml',
+  '_base_/optimizer_6x.yml',
+  '_base_/rtdetrv3_r50vd.yml',
+  '_base_/rtdetr_reader.yml',
+]
+
+TrainReader:
+  batch_size: 12
+
+EvalReader:
+  batch_size: 12
+
+weights: output/rtdetrv3_r18vd_6x_coco/model_final
+find_unused_parameters: True
+log_iter: 200
+
+o2m_branch: True
+num_queries_o2m: 450
+
+pretrain_weights: https://paddledet.bj.bcebos.com/models/pretrained/ResNet18_vd_pretrained.pdparams
+
+RTDETRV3:
+  backbone: ResNet
+  neck: HybridEncoder
+  transformer: RTDETRTransformerv3
+  detr_head: DINOv3Head
+  aux_o2m_head: PPYOLOEHead
+  post_process: DETRPostProcess
+  
+ResNet:
+  depth: 18
+  variant: d
+  return_idx: [1, 2, 3]
+  freeze_at: -1
+  freeze_norm: false
+  norm_decay: 0.
+
+HybridEncoder:
+  hidden_dim: 256
+  use_encoder_idx: [2]
+  num_encoder_layers: 1
+  encoder_layer:
+    name: TransformerLayer
+    d_model: 256
+    nhead: 8
+    dim_feedforward: 1024
+    dropout: 0.
+    activation: 'gelu'
+  expansion: 0.5
+  depth_mult: 1.0
+
+RTDETRTransformerv3:
+  eval_idx: -1
+  num_decoder_layers: 3
+  num_noises: 3
+  num_noise_queries: [300, 300, 300]
+  num_noise_denoising: 100
+  learnt_init_query: False
+  enable_morphology_detection: True
+  morphology_classes:
+    shape_type: 6           # 0-5: ring, elongated, amoeboid, pyriform, crescent, none
+    curvature: 4            # 0-3: straight, slightly_curved, C_or_S_shaped, none
+    dot_count: 4            # 0-3: 0, 1, 2, 3+ dots
+    flagellum_present: 2    # 0-1: absent, present
+    location: 2             # 0-1: intracellular, extracellular
+
+# Morphology mapping reference (for documentation)
+# morphology_mapping_reference:
+#   shape_type:
+#     ring: 0      
+#     elongated: 1    
+#     amoeboid: 2     
+#     pyriform: 3     
+#     crescent: 4     
+#     none: 5         
+#   curvature:
+#     straight: 0        
+#     slightly_curved: 1 
+#     C_or_S_shaped: 2   
+#     none: 3            
+#   dot_count:
+#     0: 0   
+#     1: 1   
+#     2: 2   
+#     3: 3   
+#   flagellum_present:
+#     False: 0  
+#     True: 1   
+#   location:
+#     intracellular: 0  
+#     extracellular: 1  
+
+# # Expected parasite morphology combinations:
+# parasite_morphology_combinations:
+#   Babesia:        [0, 3, 0, 0, 0]  # ring, none, 0_dots, no_flagellum, intracellular
+#   Leishmania:     [1, 0, 2, 1, 1]  # elongated, straight, 2_dots, flagellum, extracellular
+#   Toxoplasma:     [4, 2, 0, 0, 0]  # crescent, C_or_S, 0_dots, no_flagellum, intracellular
+#   Trypanosoma_brucei: [1, 1, 1, 1, 1]  # elongated, slightly_curved, 1_dot, flagellum, extracellular
+#   Trypanosoma_cruzi:  [1, 2, 2, 1, 1]  # elongated, C_or_S, 2_dots, flagellum, extracellular
+
+
+
+# nohup time python tools/train.py -c configs/rtdetrv3/rtdetrv3_r18vd_6x_trypanosoma.yml --eval > 50_epoch_shape.txt 2>&1 &
+
+# _BASE_: [
+#   '../datasets/trypanosoma_detection.yml',
+#   '../runtime.yml',
+#   '_base_/optimizer_6x.yml',
+#   '_base_/rtdetrv3_r50vd.yml',
+#   '_base_/rtdetr_reader.yml',
+# ]
+
+# TrainReader:
+#   batch_size: 12
+
+# EvalReader:
+#   batch_size: 12
+
+# weights: output/rtdetrv3_r18vd_6x_coco/model_final
+# find_unused_parameters: True
+# log_iter: 50
+
+# o2m_branch: True
+# num_queries_o2m: 450
+
+# pretrain_weights: https://paddledet.bj.bcebos.com/models/pretrained/ResNet18_vd_pretrained.pdparams
+
+# RTDETRV3:
+#   backbone: ResNet
+#   neck: HybridEncoder
+#   transformer: RTDETRTransformerv3
+#   detr_head: DINOv3Head
+#   aux_o2m_head: PPYOLOEHead
+#   post_process: DETRPostProcess
+  
+# ResNet:
+#   depth: 18
+#   variant: d
+#   return_idx: [1, 2, 3]
+#   freeze_at: -1
+#   freeze_norm: false
+#   norm_decay: 0.
+
+# HybridEncoder:
+#   hidden_dim: 256
+#   use_encoder_idx: [2]
+#   num_encoder_layers: 1
+#   encoder_layer:
+#     name: TransformerLayer
+#     d_model: 256
+#     nhead: 8
+#     dim_feedforward: 1024
+#     dropout: 0.
+#     activation: 'gelu'
+#   expansion: 0.5
+#   depth_mult: 1.0
+
+# RTDETRTransformerv3:
+#   eval_idx: -1
+#   num_decoder_layers: 3
+#   num_noises: 3
+#   num_noise_queries: [300, 300, 300]
+#   num_noise_denoising: 100
+#   learnt_init_query: False
+#   enable_morphology_detection: True
+#   morphology_classes:
+#     shape_type: 7
+#     size_range: 3
+#     nucleus_count: 3
+#     flagellum_present: 2
+#     location: 2
